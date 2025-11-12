@@ -22,7 +22,7 @@ async function bootstrap() {
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   const port = process.env.PORT ?? 3000;
-  await app.listen(port);
+  await app.listen(process.env.PORT || 3000);
 
   // 🎨 پیام مخصوص ترمینال بک‌اند (زرد تا راحت تشخیص بدی)
   console.log('\x1b[33m%s\x1b[0m', `⚙️  Backend (NestJS) • KalaIrani API`);
