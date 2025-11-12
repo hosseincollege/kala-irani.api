@@ -8,25 +8,26 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // ✅ اجازه اتصال Angular از 4200
+  // ✅ اجازه دسترسی Angular لوکال + نسخه‌ی سرور (Vercel)
   app.enableCors({
-    origin: ['http://localhost:4200'],
+    origin: [
+      'http://localhost:4200',
+      'https://kala-irani.vercel.app', // فرانت سرور
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   });
 
-  // ✅ امنیت ورودی‌ها
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  // ✅ پوشه‌ی آپلودها برای فایل‌های عکس و گالری‌ها
+  // ✅ فایل‌های آپلود‌شده (در مسیر /uploads)
   app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   const port = process.env.PORT ?? 3000;
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(port);
 
-  // 🎨 پیام مخصوص ترمینال بک‌اند (زرد تا راحت تشخیص بدی)
-  console.log('\x1b[33m%s\x1b[0m', `⚙️  Backend (NestJS) • KalaIrani API`);
-  console.log('\x1b[32m%s\x1b[0m', `🚀 Running • http://localhost:${port}`);
-  console.log('\x1b[36m%s\x1b[0m', `📂 Serving static files → /uploads`);
+  // 🎨 پیام ترمینال
+  console.log('\x1b[36m%s\x1b[0m', `⚙️ KalaIrani API is running at http://localhost:${port}`);
+  console.log('\x1b[33m%s\x1b[0m', `CORS enabled for localhost:4200 and kala-irani.vercel.app`);
 }
 bootstrap();
